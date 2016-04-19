@@ -1,6 +1,7 @@
 #type
 >原始类型 primitive type
 >>数字 number:全部数字为64位浮点格式数字，范围：-2^53~2^53.注意js实际的操作基于32位整数
+>>>特殊数字：NaN 与任何数字都不相等（包括他自己）。判断数字是否为NaN,x!=x 为true说明x为NaN.
 >>字符串 string:
 >>布尔值 boolean
 >>空 null
