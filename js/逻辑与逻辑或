@@ -1,0 +1,14 @@
+#逻辑与 &&
+* 但操作数都是布尔值，进行and操作
+* 对真值和假值进行and操作
+* 返回值为表达式结果。if(a == b) stop() <--> (a == b) && stop()
+#逻辑或 ||
+  同上
+  特殊用法：
+  // 如果max_width已经定义，直接使用它；否则在preferences中查找；如果没有定义就是用常量
+  var max_width = max_width || preferences.max_width || 5000;
+  // 在函数体内判断参数时候为空，为空给定默认值
+  founction(o,p){
+    p = p || {};
+    // TODO
+  }
