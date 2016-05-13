@@ -40,4 +40,5 @@ public class ShiroDemo1ApplicationTests {
 		subject.logout();
 	}
 
+
 }
