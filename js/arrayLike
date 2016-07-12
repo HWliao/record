@@ -1,0 +1,33 @@
+// 看上去很像数组的对象,典型代表(document.getElementsByTageName())
+// 构造一个'类数组'
+var a = {};  
+var i = 0;
+while(i < 10){
+  a[i] = i*i;
+  i++;
+}
+a.length = i;
+
+// 假装成数组
+var total = 0;
+for(var j = 0; j < a.length; j++){
+  total += a[j];
+}
+
+// 判断类数组对象
+// 字符串和函数有length属性,但是他们可以用typeof检测排除.
+// 在js 客户端,dom文本节点也有length属性,需要用额外的o.typenode != 3判断
+function isArrayLike(o){
+  if(o && 
+      typeof o === 'object' && 
+      isFinite(o.length) && 
+      o.length >= 0 && 
+      o.length === Math.floor(o.length) && 
+      o.length < 4294967296){
+    return true;
+  }else{
+    return false;
+  }
+}
+
+// tip: 字符串请不要当作数组来操作,虽然可以操作...
