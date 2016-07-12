@@ -1,0 +1,36 @@
+// 1.对象中一个属性包含一个名字和4个特性
+// 2.4个特性:值(value),可写性(writable),可枚举性(enumerable)和可配置性(configurable)
+// 3.获取对象属性描述对象property descriptor  Object.getOwnPropertyDescriptor()
+
+// {value:1,writable:true,enumberable:true,configurable:true}
+Object.getOwnPropertyDescriptor({x:1},'x');
+// {get:/*func*/,set:undefined,enumberable:true,configurable:true}
+Object.getOwnPropertyDescriptor(random,'octet');
+
+// 4.设置属性特性
+Object.defineProperty({},'x',{
+  value:1,
+  writable:true,
+  enumerable:true,
+  configurable:true
+});
+
+// 5.4个特性之间遵从一定规则(记不住也懒得记录,需要再去翻)
+
+// 给Object.prototype添加不可枚举的extend函数
+// 这个方法继承调用他的对象,将作为参数传入的对象的属性一一复制
+// 除了值之外,也复制属性的所有特性,除非在目标对象中存在同名的对象
+// 参数对象的所有自有对象也会一一复制
+Object.defineProperty(Object.prototype,'extend',{
+  writable:true,
+  enumberable:true,
+  configurable:true,
+  value: function(o) {
+    var names = Object.getOwnPropertyNames(o);
+    for(var i = 0; i < names.length; i++){
+      if(names[i] in this) continue;
+      var desc = Object.getOwnPropertyDescriptor(o,names[i]);
+      Object.defineProperty(this,names[i],desc);
+    }
+  }
+});

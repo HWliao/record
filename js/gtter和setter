@@ -1,0 +1,57 @@
+// demo1
+var o = {
+  // 普通的数据属性
+  data_prop:value,
+
+  // 存取器属性
+  get accessor_prop() {},
+  set accessor_prop() {}
+};
+// demo2 2D笛卡尔积坐标
+var p = {
+  // x和y是普通的可读写属性
+  x: 1.0,
+  y:1.0,
+
+  // r是可读写的存取器属性,它有get和set
+  // 函数体结束后不要忘记带上逗号
+  get r() {return Math.sqrt(this.x*this.x+this.y*this.y);},
+  set r(newvalue) {
+    var oldvalue = Math.sqrt(this.x*this.x+this.y*this.y);
+    var ratio = newvalue/oldvalue;
+    this.x *= ratio;
+    this.y *= ratio;
+  },
+  // theta是只读存取器
+  get theta() { return Math.atan2(this.y,this.x);}
+};
+
+var q = Object.create(p);
+q.x = 1, q.y = 1;
+console.log(q.r);
+console.log(q.theta);
+
+// demo3 严格自增序列
+var serialnum = {
+  // 这个序列属性包含下一个序列号
+  // $符号暗示这个属性是一个私有属性
+  $n:0,
+
+  // 返回当前值,然后自增
+  get next() {},
+  // 给n设置新的值,但只有当它比当前值大的时候才设置成功
+  set next(n) {
+    if(n >= this.$n) this.$n = n;
+    else throw "序列号的值不能比当前值小";
+  }
+};
+
+// demo4 随机属性值
+// 这个对象可以返回一个随机值的存取器属性
+// 例如,表达式"random.octet" 尝试一个随机数
+// 每次产生的随机数在0~255之间
+var random = {
+  get octet() { return Math.floor(Math.random() * 255); },
+  get uint16() { return Math.floor(Math.random() * 65536); },
+  get init16() { return Math.floor(Math.random() * 65536) - 32768;}
+};
