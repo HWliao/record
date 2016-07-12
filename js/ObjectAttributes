@@ -34,3 +34,26 @@ Object.defineProperty(Object.prototype,'extend',{
     }
   }
 });
+
+
+// object 3 attributes
+// prototype
+
+Object.getPrototypeOf(o);Object.create(o);o.isPrototypeOf(p);
+
+// class 默认的toString() 返回class字符串
+
+function classof(o) {
+  if(o === null) return 'Null';
+  if(0 === undefined) return 'Undefined';
+  return Object.prototype.toString.call(o).slice(8,-1);
+}
+
+// exExtensible
+Object.exExtensible(o);  // 查询可扩展性
+Object.preventExtensions(o);  // 转化为不可扩张对象,无法转化回来
+
+// es5
+Object.seal(o); Object.isSealed(o);  // 不可配置,不可扩张
+Object.freeze(o);Object.isFreeze(o);  // 冻结对象,除了存取器属性外所有属性只读,不可配置,对象不可扩张 
+
