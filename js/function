@@ -1,0 +1,136 @@
+// 调用方式:
+// 1.作为函数
+// 2.作为方法
+// 3.作为构造函数
+// 4.通过它们的apply()和call()间接调用
+
+
+// 实参对象,操作任意个数参数
+// 返回传入参数的最大值
+function max(/* ... */){
+  var max = Number.NEGATIVE_INFINITY;
+  for(var i = 0; i < arguments.length; i++){
+    if(arguments[i] > max) max = arguments[i];
+  }
+  return max;
+}
+
+// 实参对象和形参之间是同一个变量,es5中移除该特性,并且严格模式中arguments作为保留字不可修改
+function f(x){
+  console.log(x);       // 输出实参的初始值
+  arguments[0] = null;  // 修改实参对象同样会修改x的值
+  console.log(x);       // null
+}
+
+// 函数作为命名空间
+// IE中for/in bug
+// 定义一个扩张函数,用来将第二个以及后续参数复制到第一个参数
+// 如果o的属性拥有一个不可枚举的同名属性,则fou/in不会枚举对象o的可枚举属性
+// 除非显示检测它
+var extend = (function() {
+  for(var p in {toString:null}){
+    // 代码执行到这里,支持for/in循环
+    // 一个简单版本的extend函数
+    return function extend(o) {
+      for(var i = 1; i < arguments.length; i++){
+        var source = arguments[i];
+        for(var prop in source) o[prop] = source[prop];
+      }
+      return o;
+    };
+  }
+
+  // 代码执行到这里说明,IE bug
+  // 返回另外一个把版本的extend
+  return function partched_extend(o) {
+    for(var i = 0; i < arguments.length; i++){
+      var source = arguments[i];
+      for(var prop in source) o[prop] = source[prop];
+
+      // 检查特殊属性
+      for(var j = 0; j < protoprops.length; j++){
+        var prop = protoprops[j];
+        if(source.hasOwnProperty(prop)) o[prop] = source[prop];
+      }
+    }
+    return o;
+  };
+
+  // 这个列表列出了需要检查的特殊属性
+  var protoprops = ['toString','valueOf','constructor','hasOwnProperty','isPrototypeOf','propertyIsEnumerable','toLocalString'];
+} ());
+
+// 闭包封装私有属性
+var uniqueInteger = (function(){
+  var counter = 0;
+  return function(){
+    counter++;
+  };
+}());
+
+// 闭包,作用域链,垃圾回收 
+
+// 存取器属性,闭包共享私有状态
+// 给对象o添加了属性存取器方法
+// 提供一个判定函数,在setter方法中进行判定
+
+// getter和setter操作的数据不在对象o中,
+// 而是在作用域链中(调用函数时局部变量对象中)
+// 对于getter和setter来说这个变量是私有的没有办法绕过getter和setter对其进行操作
+function addPrivateProperty(o,name,predicate){
+  var value;  // 私有属性
+
+  o['getter'+name] = function(){
+    return value;
+  };
+
+  o['setter'+name] = function(v){
+    if(predicate && !predicate(v))
+      throw new Error('set '+name+':invalid value '+v);
+    else
+      value = v;
+  };
+}
+
+
+// 闭包内部需要对this arguments等对象应用
+
+// 函数属性
+
+// apply()实现类似aop
+// 将对象o中名为m的函数替换为另外一个函数
+function trace(o,m){
+  var original = o[m];
+  o[m] = function(){
+    console.log(new Date(),'Entering:',m);
+    var result = original.apply(this,arguments);
+    console.log(new Date(),'Existing:',m);
+  };
+}
+// es3 Function.bind实现
+if(!Function.prototype.bind){
+  Function.prototype.bind = function(o/*,args*/){
+    // 将this和arguments保留至本地
+    // 以便在后面嵌套中使用
+    var self = this;
+    var boundArgs = arguments;
+
+    // bind()方法返回值是一个函数
+    return function(){
+      // 创建一个实参列表,将传入的第二个及以后的参数传入这个函数
+      var args = [];
+      var i;
+      for(i=1;i<boundArgs.length;i++) 
+        args.push(boundArgs[i]);
+      for(i=1;i<arguments.length;i++)
+        args.push(arguments[i]);
+      return self.apply(o,args);
+    };
+  };
+}
+
+// map()
+
+// reduce()
+
+
