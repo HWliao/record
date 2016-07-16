@@ -130,7 +130,50 @@ if(!Function.prototype.bind){
 }
 
 // map()
-
+var map = Array.prototype.map ? function(a,f){
+  return a.map(f);
+}:function(a,f){
+  var results = [];
+  for(var i =0, len = a.length; i < len; i++){
+    if(i in a) results[i] = f.call(null,a[i],i,a);
+  }
+  return results;
+};
 // reduce()
+var reduce = Array.prototype.reduce ? function(a,f,initial){
+  if(arguments.length > 2)
+    return a.reduce(f,initial);
+  else
+    return a.reduce(f);
+}:function(a,f,initial){
+  var i = 0;
+  var len = a.length;
+  var accumulator;
 
+  // 以特定的初始值开始
+  if(arguments.length > 2) 
+    accumulator = initial;
+  else{
+    // 找到数组中第一个定一的索引
+    if(len == 0) 
+      throw new Error('TypeError!');
+    while(i < len){
+      if(i in a){
+        accumulator = a[i++];
+        break;
+      }else{
+        i++;
+      }
+      if(i == len) throw new Error('TypeError!');
+    }
+  }
+
+  // 对于数组剩下的元素依次调用f()
+  while(i < len){
+    if(i in a)
+      accumulator = f.call(undefined,accumulator,a[i],i,a);
+    i++;
+  }
+  return accumulator;
+};
 
