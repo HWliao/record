@@ -176,4 +176,24 @@ var reduce = Array.prototype.reduce ? function(a,f,initial){
   }
   return accumulator;
 };
+// 带记忆功能的函数
+function memorize(f){
+  // 将值保存在闭包内
+  var cache = {};
+
+  return function(){
+    // 将实参数转换为字符串保存在闭包内
+    var key = arguments.length+Array.prototype.join.call(arguments,',');
+
+    if(key in cache) 
+      return cache[key];
+    else
+      return cache[key] = f.apply(this,arguments); 
+  };
+}
+
+
+
+
+
 
