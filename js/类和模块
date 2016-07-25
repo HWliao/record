@@ -1,0 +1,148 @@
+// 鸭式辨型
+// 如果o实现了第一个参数之外的参数所表示的方法,则返回true
+function quacks(o/*,...*/){
+  for(var i = 1; i < arguments.length; i++){
+    var arg = arguments[i];
+    switch(typeof arg){
+      case 'string':
+        if(typeof o[arg] !== 'function') return false;
+        continue;
+      case 'function':
+        arg = arg.prototype;
+      case 'object':
+        for(var m in arg{
+          if(typeof arg[m] !== 'function') continue;
+          if(typeof o[m] !== 'function') return false;
+        }
+    }
+  }
+  return true;
+}
+
+// Set.js 集合类
+function Set(){
+  this.values = {};
+  this.n = 0;
+  this.add.apply(this,arguments);
+}
+
+Set.prototype.add = function(){
+  for(var i =0; i < arguments.length; i++){
+    var val = arguments[i];
+    var str = Set._v2s(val);
+    if(!this.values.hasOwnProperty(str)){
+      this.values[str] = val;
+      this.n++;
+    }
+  }
+  return this;
+};
+
+Set.prototype.remove =function(){
+  for(var i = 0; i < arguments.length; i++){
+    var str = Set._v2s(arguments[i]);
+    if(this.values.hasOwnProperty(str)){
+      delete this.values[str];
+      this.n--;
+    }
+  }
+  return this;
+};
+
+Set.prototype.contains = function(value){
+  return this.values.hasOwnProperty(Set._v2s(value));
+};
+
+Set.prototype.size = function(){
+  return this.n;
+};
+
+Set.prototype.foreach = function(f,context){
+  for(var s in this.values)
+    if(this.values.hasOwnProperty(s))
+      f.call(context,this.values[s]);
+};
+
+Set._v2s = function(val){
+  switch(val){
+    case undefined: return 'u';
+    case null: return 'n';
+    case true: return 't';
+    case false: return 'f';
+    default: switch(typeof val){
+      case 'number': return '#'+val;
+      case 'string': return '"'+val;
+      default: return '@'+objectId(val);
+    }
+  }
+
+  function objectId(o){
+    var prop = '|**object**|';
+    if(!o.hasOwnProperty(prop))
+      o[prop] = Set._v2s.next++;
+    return o[prop];
+  }
+};
+
+// 枚举类型
+// 这个函数定义一个新的枚举类型,实参对象表示类的每一个实例的名字和值
+// 返回值是一个构造函数,它标识这个新类
+// 注意,这个构造函数也会抛出异常,不用用它来创建新实例
+// 返回的函数包含名值对的映射表
+// 包括由值组成数组,以及foreach迭代器
+function enumeration(nameToValues){
+   
+  var enumeration = function(){ throw new Error('Can Not Instantiate Enumeration.');};
+
+  var proto = enumeration.prototype = {
+    constructor: enumeration,
+    toString: function(){
+      return this.name;
+    },
+    valueOf:function(){
+      return this.value;
+    },
+    toJOSN:function(){
+      return this.name;
+    }
+  };
+
+  enumeration.values = [];
+
+  for(var name in nameToValues){
+    var e  = inherit(proto);
+    e.name = name;
+    e.value = nameToValues[name];
+    enumeration[name] = e;
+    enumeration.push(e);
+  }
+
+  enumeration.foreach = function(f,c){
+    for(var i = 0; i < this.values.length; i++) f.call(c,this.values[i]);
+  };
+
+  return enumeration;
+}
+
+// 这个函数返回Set的子类
+// 并重写该类的add方法用以对添加的元素做特殊处理
+function filteredSetSubclass(superclass,filter){
+  var constructor = function(){
+    superclass.apply(this,arguments);
+  };
+
+  var prop = constructor.prototype = inherit(superclass.prototype);
+  prop.constructor = constructor;
+
+  prop.add = function(){
+    for(var i = 0; i < arguments.length; i++){
+      var v = arguments[i];
+      if(!filter(v)) 
+        throw new Error('value ' + v + ' rejected by filter.');
+    }
+
+    superclass.prototype.add.apply(this,arguments);
+  };
+
+  return constructor;
+}
