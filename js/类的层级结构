@@ -1,0 +1,13 @@
+// 抽象方法
+function abstractmethod(){ 
+  throw new Error('Can not instantiate abstract classes.');
+}
+
+// AbstractSet 类定义了一个抽象方法:contains()
+function AbstractSet(){
+  throw new Error('Can not instantiate abstract classes.');
+}
+
+
+
+

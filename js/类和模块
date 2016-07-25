@@ -146,3 +146,25 @@ function filteredSetSubclass(superclass,filter){
 
   return constructor;
 }
+
+// 匿名函数封装作用域
+var NonNullSet = (function(){
+  var superclass = Set;
+
+  return superclass.extend(
+    function(){ superclass.apply(this,arguments);},{
+      add:function(){
+        for(var i = 0; i < arguments.length; i++){
+          if(arguments[i] == null)
+            throw new Error('Can not add null or undefined.');
+
+          return superclass.add.apply(this,arguments);
+        }
+      }
+    });
+
+}());
+
+
+
+
