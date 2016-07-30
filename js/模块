@@ -1,0 +1,45 @@
+// 用作命名空间的对象
+// 使用反转互联网域名,作为模块名,并加上模块名项目名作为命名空间
+// com.xxx.module.project.class
+// 每个模块对应一个文件
+
+
+// 作为私有命名空间的函数
+// 模块对外导出一些公用的api,私有的方法,属性对外不可见
+
+// 声明全局变量Set,使用一个函数的返回值给他赋值
+var Set = (function(){
+  function Set(){
+    this.values = [];
+    this.n = 0;
+    this.add.aplly(this,arguments);
+  }
+
+  Set.prototype.contains = function(value){
+    return this.values.hasOwnProperty(v2s(value));
+  };
+  Set.prototype.size = function(){
+    return this.n;
+  };
+  Set.prototype.add = function(value){
+    // TODO
+  };
+  Set.prototype.remove = function(){
+    // TODO
+  };
+  Set.prototype.foreach = function(f,context){
+    // TODO
+  };
+
+  function v2s(){
+    // TOOD
+  }
+
+  function objectId(o){
+    // TODO
+  }
+
+  var nextId = 1;
+
+  return Set;
+}());
