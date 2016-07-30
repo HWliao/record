@@ -10,7 +10,7 @@ function quacks(o/*,...*/){
       case 'function':
         arg = arg.prototype;
       case 'object':
-        for(var m in arg{
+        for(var m in arg){
           if(typeof arg[m] !== 'function') continue;
           if(typeof o[m] !== 'function') return false;
         }
@@ -79,7 +79,7 @@ Set._v2s = function(val){
   function objectId(o){
     var prop = '|**object**|';
     if(!o.hasOwnProperty(prop))
-      o[prop] = Set._v2s.next++;
+      o[prop] = Set.next++;
     return o[prop];
   }
 };
