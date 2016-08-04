@@ -1,0 +1,39 @@
+// 异步载入并执行一个url中的脚本
+function loadasync(url){
+  var head = document.getElementsByName('head')[0];
+  var s = document.createElement('script');
+  s.src = url;
+  head.appendChild(s);
+}
+
+// 注册函数f,当文档载入完成时执行这个函数f
+// 如果函数已经载入完成,尽快以异步方式执行它
+function onLoad(f){
+  if(onLoad.loaded){
+    window.setTimeout(f,0);
+  }else if(window.addEventListener{
+    window.addEventListener('onLoad',f,false);
+  }else{
+    // less than IE8
+    window.attachEvent('onLoad',f);
+  }
+}
+
+onLoad.loaded = false;
+
+// 客户端js线程模型
+// js语言核心不包含任何线程机制.一切以单线程运行,当某个事件运行密集型计算时,会阻塞其他事件,以及ui渲染
+// 所以js不适合计算密集型编程,密集型计算可以用setTimeout切分为多个子任务完成.
+
+// 客户端js时间线
+// 1.web浏览器创建Document对象,并且开始解析Web页面.document.readyState=loading
+// 2.html解析遇到无defer和async的<script>元素,加载并同步执行js代码,html解析器此时停止解析
+// 3.解析器遇到带有async的script元素是开始下载js脚本,并继续解析html
+// 4.但文档完成解析时候,document.readyState=interactive
+// 5.执行所有defer脚本,async下载下来的脚本也可能在此时执行
+// 6.浏览器在document上触发DOMContentLoaded事件.这标志着程序从同步执行阶段转换到了异步事件驱动阶段.(async脚本还没有执行完成)
+// 7.文档解析完成,此时浏览器可能还有其他内容还未载入.document.readyState=complete,浏览器触发Window上的load事件
+// 8.event-loop
+
+// 功能测试,解决兼容性问题,在使用摸个功能前先对其进行检查
+
