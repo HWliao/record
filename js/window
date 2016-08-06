@@ -1,0 +1,37 @@
+// setTimeout setInterval clearInterval
+function invoke(f, start, interval, end){
+  if(!start){
+    start = 0;
+  }
+  if(arguments.length <= 2){
+    setTimeout(f,start);
+  }else{
+    setTimeout(repeat(),start);
+    function repeat(){
+      var h = setInterval(f,interval);
+      if(end){
+        setTimeout(function(){
+          clearInterval(h);
+        },end);
+      }
+    }
+  }
+}
+
+// 浏览器嗅探器
+// 为客户端定义browser.name和browser.version
+// name和version都是string,对于不同的浏览器
+//
+// 'webkit': safri或者chrome;版本号是webkit的版本号
+// 'Opera': Opera;版本号即为软件版本号
+// 'mozilla': Firefox或者其他基于gecko内核的浏览器;版本号是gecko的版本号
+// 'msie'; IE;版本号即为软件版本号
+var browser = (function(){
+  var s = navigator.userAgent.toLowerCase();
+  var match = /(webkit)[ \/]([\w.]+)/.exec(s)||
+    /(opera)(?:.*version)?[ \/]([\w.]+)/.exec(s)||
+    /(msie) ([\w.]+)/.exec(s)||
+    !/compatible/.test(s)&&/(mozilla)(?:.*? rv:([\w.]))?/.exec(s)||
+    [];
+  return {name: match[1] || '', version: match[2] || '0'};
+}());
