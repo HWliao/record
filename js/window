@@ -35,3 +35,5 @@ var browser = (function(){
     [];
   return {name: match[1] || '', version: match[2] || '0'};
 }());
+
+// window.screen

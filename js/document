@@ -1,0 +1,228 @@
+// 可移植的文档遍历函数
+// 返回n的第n层祖先元素,如果不存在则返回null
+function parent(e,n){
+  if(n === undefined){
+    n = 1;
+  }
+  while(n-- && e){
+    e = e.parentNode;
+  }
+  if(!e || e.nodeType !== 1){
+    return null;
+  }
+  return e;
+}
+
+// 返回e的第n个兄弟元素
+function sibling(e,n){
+  while(e && n !== 0){
+    if(n > 0){
+      if(e.nextElementSibling){
+        e = e.nextElementSibling;
+      }else{
+        for(e = e.nextSibling;e && e.nodeType !== 1;e = e.nextSibling);
+      }
+    }else{
+      if(e.previousElementSibling){
+        e = e.previousElementSibling;
+      }else{
+        for(e = e.previousSibling;e && e.nodeType !== 1;e = e.previousSibling);
+      }
+    }
+  }
+  return e;
+}
+
+// 返回元素e的第n代子元素,如果不存在则返回null
+function child(e,n){
+  if(e.children){
+    if(n < 0){
+      n += e.children.lenght;
+    }
+    if(n < 0){
+      return null;
+    }
+    return e.children[n];
+  }
+
+  // e没有children数组
+  if(n >= 0){
+    if(e.firstElementChild){
+      e = e.firstElementChild;
+    }else{
+      for(e = e.firstChild;e && e.nodeType !== 1;e = e.nextSibling);
+    }
+    return sibling(e,n); 
+  }else{
+    if(e.lastElementChild){
+      e = e.lastElementChild;
+    }else{
+      for(e = e.lastChild;e && e.nodeType !== 1;e.previousSibling);
+    }
+    return sibling(e,n+1);
+  }
+}
+
+// 一个参数返回元素的textContent或者innerText
+// 两个参数用value参数的值设置元素的textContent或者innerText
+function textContent(element,value){
+  var content = element.textContent;
+  if(value === undefined){
+    if(content !==  undefined){
+      return content;
+    }else{
+      return element.innerText;
+    }
+  }else{
+    if(content !== undefined){
+      element.textContent = value;
+    }else{
+      element.innerText = value;
+    }
+  }
+}
+
+// 为不支持outerHtml的浏览器实现outerHtml属性
+// 假设浏览器确实支持innerhtml,比且有一个可以扩展的Element.prototype
+// 并且可以定义getter和setter
+(function(){
+  // 如果存在立即返回
+  if(document.createElement("div").outerHTML) return;
+
+  // 返回this所应用的外部html
+  function outerHTMLGetter(){
+    var container = document.createElement('div');
+    container.appendChild(this.cloneNode(true));
+    return container.innerHTML;
+  }
+
+  // 用指定的值设置外部HTML
+  function outerHTMLSetter(value){
+    var container = document.createElement('div');
+    container.innerHTML = value;
+
+    // 将虚拟元素中的文档全部移到文档中
+    while(container.firstChild){
+      this.parentNode.insertBefore(container.firstChild,this);
+    }
+    this.parentNode.removeChild(this);
+  }
+
+  if(Object.defineProperty){
+    Object.defineProperty(Element.prototype,'outerHTML',{
+      get: outerHTMLGetter,
+      set: outerHTMLSetter,
+      enumerable: false,
+      configurable: true
+    });
+  }else{
+    Element.prototype._defineGetter_('outerHTML',outerHTMLGetter);
+    Element.prototype._defineSetter_('outerHTML',outerHTMLSetter);
+  }
+
+}());
+
+
+// 这个模块在页面注册一个可在页面加载完成后自动运行的匿名函数.但这个函数运行时候,
+// 回去文档中查找id为'OTC'的元素.如果这个元素不存在,就创建一个
+
+// 生成的OCT应该具有自己的样式.整个目录的className设置为'TOCEntry'
+// 同样我们为不同层级的标题定义不同的样式.
+// <h1>TOCLevel1 <h2>TOCLevel2 <h3>TOCLevel3
+// 端编号TOCSectNum
+
+#TOC {
+  border: solic black 1px;
+  margin: 10px;
+  padding: 10px;
+}
+.TOCEntry {
+  font-family: sans-serif;
+}
+.TOCEntry a {
+  text-decoration: none;
+}
+.TOCLevel1 {
+  font-size: 16pt;
+  font-weight: blod;
+}
+.TOCLevel2 {
+  font-size: 12px;
+  margin-left: .5in;
+}
+.TOCSectNum:after {
+  content: ": ";
+}
+
+document.onLoad(function(){
+  var toc = document.getElementById('TOC');
+  if(!toc){
+    toc = document.createElement('div');
+    toc.id = 'TOC';
+    document.body.insertBefore(toc,document.body.firstChild);
+  }
+
+  // 查找所有的标题元素
+  var headlings;
+  if(document.querySelectorAll){
+    headlings = document.querySelectorAll('h1,h2,h3,h4,h5,h6');
+  }else{
+    headlings = findHeadings(document.body,[]);
+  }
+
+  function findHeadings(root,sects){
+    for(var c = root.firstChild;c != null; c = c.nextSibling){
+      if(c.nodeType !== 1){
+        continue;
+      }
+      if(c.tagName.length == 2 && c.tagName.charAt(0) == 'H'){
+        sects.push(c);
+      }else{
+        findHeadings(c,sects);
+      }
+    }
+    return sects;
+  }
+
+  var sectionNums = [0,0,0,0,0,0,0];
+
+  for(var h = 0;h < headlings.lenght; h++){
+    var heading = headlings[h];
+
+    if(heading.parentNode == toc){
+      continue;
+    }
+
+    var level = parseInt(heading.tagName.charAt(1));
+    if(isNan(level) || level < 1 || level > 6) {
+      continue; 
+    }
+
+    sectionNums[level - 1]++;
+    for(var i = level;i < 6;i++){
+      sectionNums[i] = 0;
+    }
+
+    var sectionNumber = sectionNums.slice(0,level).join('.');
+
+    var span = document.createElement('span');
+    span.clssName = 'TOCSectNum';
+    span.innerHTML = sectionNumber;
+    heading.insertBefore(span,heading.firstChild);
+
+    var anchor = document.createElement('a');
+    anchor.name = 'TOC'+sectionNumber;
+    heading.parentNode.insertBefore(anchor,heading);
+    anchor.appendChild(heading);
+
+    var link = document.createElement('a');
+    link.href = '#TOC'+sectionNumber;
+    link.innerHTML = heading.innerHTML;
+
+    var entry = document.createElement('div');
+    entry.className = 'TOCEntry TOCLevel'+level;
+    entry.appendChild(link);
+
+    toc.appendChild(entry);
+  }
+});
