@@ -226,3 +226,37 @@ document.onLoad(function(){
     toc.appendChild(entry);
   }
 });
+
+// 插叙滚动条的位置
+// 返回{x:12,y:12}
+function getScrollOffsets(w){
+  w = w || window;
+
+  if(w.pageXOffset != null){
+    return {x:w.pageXOffset,y:w.pageYOffset};
+  }
+
+  var d = w.document;
+
+  if(d.compatMode == 'CSS1Compat'){
+    return {x:d.documentElement.scrollLeft,y:d.documentElement.scrollTop};
+  }else{
+    return {x:d.body.scrollLeft,y:d.body.scrollTop};
+  }
+}
+
+// 查询视口的窗口大小
+function getViewportSize(w){
+  w = w || window;
+
+  if(w.innerWidth != null){
+    return {w:w.innerWidth,h:w.innerHeight};
+  }
+
+  var d = w.document;
+  if(d.compatMode == 'CSS1Compat'){
+    return {w:d.documentElement.clientWidth,h:d.documentElement.clientHeight};
+  }else{
+    return {w:d.body.clientWidth,h:d.documentElement.clientHeight};
+  }
+}
