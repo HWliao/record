@@ -1,0 +1,125 @@
+// css 动画
+
+
+// 将e转化为相对定位的元素,使之左右振动
+// e 可以使元素或者元素id
+// oncomplete function(e){}
+// distance e的振动距离,默认5像素
+// time 振动多久,默认500毫秒
+function shake(e,oncomplete,distance,time){
+  if(typeof e === 'string'){
+    e = document.getElementById(e);
+  }
+  time = time || 500;
+  distance = distance || 5;
+
+  var originalStyle = e.style.cssText;
+  e.style.position = 'relative';
+  var start = new Date().getTime();
+  animate();
+
+  // 检查消耗的时间,并更新e的位置
+  // 如果动画完成,还原e的位置
+  // 否则,从新运动
+  function animate(){
+    var now = new Date().getTime();
+    var elapsed = now - start;
+    var fraction = elapsed/time;
+
+    if(fraction < 1){
+      // 作为动画完成比例的函数,计算e的x位置
+      // 使用正弦函数将完成比例乘以4pi
+      // 所以它来回2次
+      var x = distance * Math.sin(fraction*4*Math.PI);
+      e.style.left = x + 'px';
+
+      // 在25毫秒后或在总时间的最后尝试再次运行函数
+      // 产生每秒40贞的动画
+      setTimeout(animate,Math.min(25,time - elapsed);
+    }else{
+      e.style.cssText = originalStyle;
+      if(oncomplete){
+        oncomplete(e);
+      }
+    }
+  }
+}
+
+// 以毫秒级的时间将e从完全不透明淡出到完全透明
+// 在调用函数时假设e都是完全不透明的
+// oncompelet是一个可选函数,将e作为参数传递过去
+// time 默认500
+function fadeOut(e,oncompelet,time){
+  if(typeof e === 'string'){
+    e = document.getElementById(e);
+  }
+  time = time || 500;
+
+  // 使用math.sqrt作为一个简单的缓懂函数
+  var ease = Math.sqrt;
+
+  var start = new Date().getTime();
+  animate();
+
+  function anmate(){
+    var elapsed = new Date().getTime() - start;
+    var fraction = elapsed/time;
+
+    if(fraction < 1){
+      var opacity = 1 - ease(fraction);
+      e.style.opacity = String(opacity);
+
+      setTimeout(animate,Math.min(25,time - elapsed));
+    }else{
+      e.style.opacity = '0';
+      if(oncompelet){
+        oncompelet(e);
+      }
+    }
+  }
+}
+
+// html5 classList兼容性实现
+function classList(e){
+  if(e.classList){
+    return e.classList;
+  }else{
+    return new CSSClassList(e);
+  }
+}
+
+function CSSClassList(e){
+  this.e = e;
+}
+
+CSSClassList.prototype.contains = function(c){
+  if(c.length === 0 || c.indexof(' ') !== -1){
+    throw new Error('Invalid Class Name: ' + c);
+  }
+
+  var classes = this.e.cssText;
+
+  if(!classes){
+    return false;
+  }
+
+  if(classes == c){
+    return true;
+  }
+
+  return classes.search('\\b' + c + '\\b') != -1;
+};
+
+CSSClassList.prototype.add = function(c){
+  if(this.contains(c)){
+    return;
+  }else{
+    var classes = this.e.cssText;
+    if(classes && classes[classes.length-1] != ' '){
+      c += ' '; 
+    }
+    this.e.cssText += c;
+  }
+};
+
+

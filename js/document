@@ -260,3 +260,37 @@ function getViewportSize(w){
     return {w:d.body.clientWidth,h:d.documentElement.clientHeight};
   }
 }
+
+// innerHTML的流式api
+function ElementStream(elt){
+  if(typeof elt === 'string'){
+    elt = document.getElementById(elt);
+  }
+  this.elt = elt;
+  this.buffer = '';
+}
+
+// 链接所有参数
+ElementStream.prototype.write = function(){
+  this.buffer += Array.prototype.join.call(arguments,'');
+};
+
+// 增加换行符
+ElementStream.prototype.writeln = function(){
+  this.buffer += Array.prototype.join.call(arguments,'') + '\n';
+};
+
+// 从缓存设置元素的内容'
+ElementStream.prototype.close = function(){
+  this.elt.innerHTML = this.buffer;
+  this.buffer = '';
+};
+
+// 查询选取的文本
+function getSelectedText(){
+  if(window.getSelection){
+    return window.getSelection().toString();
+  }else if(document.selection){
+    return document.selection.createRange().text;
+  }
+}
