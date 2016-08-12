@@ -1,0 +1,35 @@
+// 事件处理函数
+function handler(event){
+  event = event || window.event;
+  // TOOD
+}
+
+// 事件处理函数的运行环境 this
+// IE中this指定window
+function addEvent(target,type,handler){
+  if(target.addEventListener){
+    target.addEventListener(type,handler,false);
+  }else{
+    target.addEvent('on' + type,
+      function(event){
+        event = event || window.event;
+        return handler.call(target,event);
+      });
+  }
+}
+
+// 事件处理函数的作用域
+// 事件处理函数,使用HTML属性的方式绑定,会导致处理函数的作用域发生变化,不再是定义时决定而是变为window下但当前对象元素
+
+// 多个注册事件的调用顺序
+// 1.通过设置对象属性或者HTML属性注册的处理程序一定优先调用
+// 2.使用addEventListener()注册的处理程序按照它们的转车顺序调用
+// 3.使用attchEvent()注册的处理程序可能按照任何顺序调用,所以代码不应该依赖于调用顺序
+
+// 事件传播
+// 1.当事件为单独事件时,简单的调用对象上合适的处理函数即可
+// 2.当对象为文档或者文档元素时,会发生事件冒泡.大部分事件都会冒泡,除了focus,blur,scroll
+// 3级事件模型:捕获,处理,冒泡
+
+// 捕获世家处理程序:事件捕获阶段类似于反向的冒泡.最先调用window捕获程序,然后是document body以此类推,直到目标对象,但是
+// 不会调用目标对象的捕获程序

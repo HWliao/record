@@ -122,4 +122,28 @@ CSSClassList.prototype.add = function(c){
   }
 };
 
+CSSClassList.prototype.remove = function(){
+  if(c.length === 0 || c.indexof(' ') != -1){
+    throw new Error('Invalid Class Name: ' + c);
+  }
+  var pattern = new RegExp('\\b' + c + '\\b\\s*','g');
+  this.e.className = this.e.className.replace(pattern,'');
+};
 
+CSSClassList.prototype.toggle = function(c){
+  if(this.contains(c)){
+    this.remove(c);
+    return false;
+  }else{
+    this.add(c);
+    return true;
+  }
+};
+
+CSSClassList.prototype.toString = function(){
+  return this.e.className;
+};
+
+CSSClassList.prototype.toArray = function(){
+  return this.e.className.match(/\b\w+\b/g) || [];
+};
