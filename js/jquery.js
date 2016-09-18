@@ -35,10 +35,13 @@ $('logoff').click(function(){
 $(document).delegate('a','mouseover',function(e){
   console.log('test');
 });
-// 另外一个更加广泛的实时事件机制:live.原理依然是冒泡
+// 另外一个更加广泛的实时事件机制:live.原理依然是冒泡,但是live的用法跟bind类似,使用频率更高
+// live的绑定依赖于jquey对象的context和selector
 $('#log').live('mouseover',function(){
   console.log('test');
 });
+
+
 
 
 
