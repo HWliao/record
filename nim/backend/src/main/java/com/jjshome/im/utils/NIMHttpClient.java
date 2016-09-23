@@ -63,15 +63,15 @@ public class NIMHttpClient {
     return response;
   }
 
-  public static void main(String[] args) throws IOException {
-    Random random = new Random(100000000);
-
-    String appKey = "7ca1eb5e5cd9416289ef35d78c67085a";
-    String appSecret = "d85b48dadd51";
-    String nonce = String.valueOf(random.nextInt());
-    List<NameValuePair> nvps = new ArrayList<NameValuePair>();
-    nvps.add(new BasicNameValuePair("accid", "124567"));
-    HttpResponse response = doHttpPost(URL_CREATE_NIM_ACCID, appKey, appSecret, nonce, new Date(), nvps);
-    System.out.println(EntityUtils.toString(response.getEntity(),"utf-8"));
-  }
+//  public static void main(String[] args) throws IOException {
+//    Random random = new Random(100000000);
+//
+//    String appKey = "7ca1eb5e5cd9416289ef35d78c67085a";
+//    String appSecret = "d85b48dadd51";
+//    String nonce = String.valueOf(random.nextInt());
+//    List<NameValuePair> nvps = new ArrayList<NameValuePair>();
+//    nvps.add(new BasicNameValuePair("accid", "124567"));
+//    HttpResponse response = doHttpPost(URL_CREATE_NIM_ACCID, appKey, appSecret, nonce, new Date(), nvps);
+//    System.out.println(EntityUtils.toString(response.getEntity(),"utf-8"));
+//  }
 }

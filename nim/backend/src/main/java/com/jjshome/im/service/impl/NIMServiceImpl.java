@@ -75,7 +75,7 @@ public class NIMServiceImpl implements NIMService {
    * @return
    */
   @Override
-  public NIMAccount registerNIMAccount(int userId) {
+  public NIMAccount registerNIMAccount(long userId) {
     NIMAccount account = null;
 
     String accId = UUID.randomUUID().toString().replace("-","");
@@ -108,6 +108,17 @@ public class NIMServiceImpl implements NIMService {
       this.logger.error("NIMServiceImpl@registerNIMAccount:url="+URL_CREATE_NIM_ACCID+",accid="+accId,e);
     }
     return account;
+  }
+
+  @Override
+  public NIMAccount findNIMAccountByUserId(long id) {
+    List<NIMAccount> accs = this.nimAccountDao.findByUserId(id);
+    if(accs == null || accs.size() == 0 || accs.size()> 1){
+      this.logger.error("NIMServiceImpl@findNIMAccountByUserId:userId="+id);
+      throw new RuntimeException("系统数据异常!");
+    }else{
+      return accs.get(0);
+    }
   }
 
 

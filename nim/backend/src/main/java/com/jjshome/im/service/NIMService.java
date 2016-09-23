@@ -13,5 +13,12 @@ public interface NIMService {
    * @param userId 用户id
    * @return nim账户信息
    */
-  public NIMAccount registerNIMAccount(int userId);
+  public NIMAccount registerNIMAccount(long userId);
+
+  /**
+   * 根据userid查询nim账户信息
+   * @param id
+   * @return nim账户信息
+   */
+  NIMAccount findNIMAccountByUserId(long id);
 }

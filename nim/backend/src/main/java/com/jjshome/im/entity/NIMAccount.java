@@ -1,7 +1,5 @@
 package com.jjshome.im.entity;
 
-import com.sun.javafx.beans.annotations.Default;
-
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 import java.io.Serializable;

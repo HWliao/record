@@ -3,6 +3,8 @@ package com.jjshome.im.service;
 import com.jjshome.im.entity.NIMAccount;
 import com.jjshome.im.entity.User;
 
+import java.util.Map;
+
 /**
  * im先关操作
  * Created by liaohongwei on 2016/9/22.
@@ -21,4 +23,11 @@ public interface ImService {
    * @return 存在 true 不存在 false
    */
   public boolean hasOne(User user);
+
+  /**
+   * 验证用户是否有登入权限
+   * @param user 登入用户
+   * @return 用户省份信息,包括nim账户信息,用户信息
+   */
+  Map<String,Object> authenticate(User user);
 }

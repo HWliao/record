@@ -20,4 +20,7 @@ public interface UserDao extends CrudRepository<User,Long> {
    */
   @Query("select u from User u where u.account =:account")
   List<User> findByAccount(@Param("account") String account);
+
+  @Query("select u from User u where u.account=:account and u.pwd=:pwd")
+  List<User> finByAccountAndPwd(@Param("account") String account, @Param("pwd") String pwd);
 }
