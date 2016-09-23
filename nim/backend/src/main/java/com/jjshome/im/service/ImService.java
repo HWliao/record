@@ -1,5 +1,6 @@
 package com.jjshome.im.service;
 
+import com.jjshome.im.entity.NIMAccount;
 import com.jjshome.im.entity.User;
 
 /**
@@ -14,5 +15,10 @@ public interface ImService {
    */
   public User register(User user);
 
-  public boolean isOne(User user);
+  /**
+   * 是否已经存在了
+   * @param user
+   * @return 存在 true 不存在 false
+   */
+  public boolean hasOne(User user);
 }

@@ -22,7 +22,7 @@ public class ImController {
     user.setAccount(command.getAccount());
     user.setNick(command.getNick());
     user.setPwd(command.getPwd());
-    boolean flag = imService.isOne(user);
+    boolean flag = imService.hasOne(user);
     if(flag){
       user = imService.register(user);
       return ControllerUtil.wrapSuccessRes(user);
